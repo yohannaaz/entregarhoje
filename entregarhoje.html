@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <button onclick="lerCarrinhoDeCompras()">Adicionar itens no carrinho de compras</button>
+    <button onclick="visualizarDesconto()">Adicionar seu cupom de desconto</button>
+
+    <div id="output">
+    
+    </div>
+
+    <script>
+        // Variáveis globais
+        let valorCompraFinal = 0;
+        let resultadoCupom = 0;
+        let quantidadeItem = 0;
+        let modeloItem = 0;
+        let direitoAoCupom = "";
+
+        // Função para ler carrinho de compras
+        function lerCarrinhoDeCompras() {
+            let opcao1 = prompt("Deseja iniciar seu carrinho de compras? [10-Sim] [20-Não]");
+
+            while (opcao1 === "10") {
+                modeloItem = Number(prompt("Escolha um modelo:\n1. Caneta - R$2\n2. Borracha - R$5\n3. Caderno - R$20\n4. Tesoura - R$10\n5. Mochila - R$100"));
+
+                let valorItem = 0; // Inicializa o valor do item
+
+                switch (modeloItem) {
+                    case 1:
+                        valorItem = 2;
+                        break;
+                    case 2:
+                        valorItem = 5;
+                        break;
+                    case 3:
+                        valorItem = 20;
+                        break;
+                    case 4:
+                        valorItem = 10;
+                        break;
+                    case 5:
+                        valorItem = 100;
+                        break;
+                    default:
+                        valorItem = 0; // Valor padrão se o modelo não for reconhecido
+                        break;
+                }
+
+                if (modeloItem >= 1 && modeloItem <= 5) {
+                    let quantidadeValida = false;
+                    while (!quantidadeValida) {
+                        quantidadeItem = Number(prompt(`Digite a quantidade de ${getModeloNome(modeloItem)} que deseja:`));
+                        if (!isNaN(quantidadeItem) && quantidadeItem > 0) {
+                            quantidadeValida = true;
+                        } else {
+                            alert("Por favor, digite uma quantidade válida.");
+                        }
+                    }
+
+                    valorCompraFinal += valorItem * quantidadeItem;
+                } else {
+                    alert("Modelo inválido. Escolha um modelo válido.");
+                }
+
+                opcao1 = prompt("Deseja adicionar mais modelos de itens? [10-Sim] [20-Não]");
+            }
+
+            // Verifica o direito ao cupom baseado no valor final da compra
+            verificarDireitoAoCupom();
+
+            // Atualiza a saída com os resultados
+            atualizarOutput();
+        }
+
+        // Função para verificar o direito ao cupom com base no valor final da compra
+        function verificarDireitoAoCupom() {
+            if (valorCompraFinal >= 300 && valorCompraFinal < 400) {
+                direitoAoCupom = "DESCONTAO20";
+                resultadoCupom = valorCompraFinal - (valorCompraFinal * 0.2);
+            } else if (valorCompraFinal >= 400 && valorCompraFinal < 500) {
+                direitoAoCupom = "DESCONTAO30";
+                resultadoCupom = valorCompraFinal - (valorCompraFinal * 0.3);
+            } else if (valorCompraFinal >= 500) {
+                direitoAoCupom = "DESCONTAO40";
+                resultadoCupom = valorCompraFinal - (valorCompraFinal * 0.4);
+            } else {
+                direitoAoCupom = "Nenhum cupom aplicado";
+                resultadoCupom = valorCompraFinal;
+            }
+        }
+
+        // Função para visualizar desconto
+        function visualizarDesconto() {
+            let valorCompra = Number(prompt("Digite o valor final do seu carrinho"));
+
+            if (valorCompra >= 300 && valorCompra < 400) {
+                direitoAoCupom = "DESCONTAO20";
+                resultadoCupom = valorCompra - (valorCompra * 0.2);
+            } else if (valorCompra >= 400 && valorCompra < 500) {
+                direitoAoCupom = "DESCONTAO30";
+                resultadoCupom = valorCompra - (valorCompra * 0.3);
+            } else if (valorCompra >= 500) {
+                direitoAoCupom = "DESCONTAO40";
+                resultadoCupom = valorCompra - (valorCompra * 0.4);
+            } else {
+                direitoAoCupom = "Nenhum cupom aplicado";
+                resultadoCupom = valorCompra;
+            }
+
+            // Atualiza a saída com os resultados
+            atualizarOutput();
+        }
+
+        // Função para atualizar a saída na página
+        function atualizarOutput() {
+            let output = `
+                <p>Modelo escolhido: ${getModeloNome(modeloItem)}</p>
+                <p>Quantidade: ${quantidadeItem}</p>
+                <p>Valor final da compra: R$${resultadoCupom.toFixed(2)}</p>
+                <p>Cupom aplicado: ${direitoAoCupom}</p>
+            `;
+            document.getElementById('output').innerHTML = output;
+        }
+
+        // Função auxiliar para obter o nome do modelo
+        function getModeloNome(modelo) {
+            switch (modelo) {
+                case 1:
+                    return "Caneta";
+                case 2:
+                    return "Borracha";
+                case 3:
+                    return "Caderno";
+                case 4:
+                    return "Tesoura";
+                case 5:
+                    return "Mochila";
+                default:
+                    return "Modelo não especificado";
+            }
+        }
+    </script>
+</body>
+</html>
